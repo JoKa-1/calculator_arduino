@@ -1,0 +1,10 @@
+CompileFlags:
+  Add:
+    - -I/Users/usr/Arduino15/
+    - -I/Users/usr/Arduino15/libraries
+    - -I/Users/usr/Arduino15/packages/arduino/hardware/avr/1.8.6/variants/standard
+    - -I/Users/usr/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino
+    - -I/opt/homebrew/Cellar/avr-gcc@9/9.4.0_1/avr/include
+    - -I/opt/homebrew/Cellar/avr-gcc@9/9.4.0_1/lib/avr-gcc/9/gcc/avr/9.4.0/include
+    - --target=avr
+    - -mmcu=atmega328p
