@@ -13,7 +13,7 @@ Adds two digit numbers together
 - images what the setup for the hardware looks like
 
 
-### caveats 
+## caveats 
 
 #### hardware setup
 
