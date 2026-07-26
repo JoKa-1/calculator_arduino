@@ -24,7 +24,7 @@ const int entr_pin = 10;
 const int ac_pin = 9;
 
 // action intervalls
-const int press_intervall = 50; // in milliseconds
+const int press_intervall = 20; // in milliseconds
 const int printInterval = 250; // in milliseconds
 
 // functions

@@ -65,5 +65,5 @@ void _loop()
     Button::catch_ac_press(&state);
   }
   
-  utils::print2serial(&state,  &startMillisPrint, printInterval);
+  //utils::print2serial(&state,  &startMillisPrint, printInterval);
 }
