@@ -18,8 +18,8 @@ Adds two digit numbers together
 #### hardware setup
 
 The Buttons where designed to align with the '>' on the screen, however currently the HW setup isnt reflecting that.
-Instead the mapping is as follows:
-#     #      #    #
+Instead the mapping is as follows (where 'o' is a button):
+o     o      o    o
 ^     ^      ^    ^
 AC    ENTR   SUB  ADD
 #### neovim setup
