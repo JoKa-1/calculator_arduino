@@ -72,18 +72,7 @@ namespace Calculator {
          }
         
          if(state->second.active){
-            int sum = state->first.value + state->second.value;
-            // TODO: fix this inconsistency in how result-field is written compared to the others
-            // because the result field isn't written incremetally it has to be simulated to written so
-            // this also means that the limit check in the Screen::update_numberfield can't catch these so
-            // it has to be done once before
-            //if (sum < state->result.lowerLimit || sum > state->result.upperLimit)
-            //{
-            //    Serial.println("Result would exceed limits");
-            //  return;
-            //};
-            //Screen::write_result(sum, state);
-            state->result.value = sum;
+            state->result.value = state->first.value + state->second.value;
             if(0 != Screen::update_numberfield(&(state->result)))
             {
               Serial.println("Input would exceed limits");
