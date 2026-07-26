@@ -1,6 +1,10 @@
 #include "local.h"
+#include "src/screen_actions.h"
+#include "src/button_actions.h"
 #include <Arduino.h>
 #include <LiquidCrystal.h>
+
+using namespace Calculator;
 
 #define printDebug(var) \
     Serial.print(#var ": "); \
@@ -20,27 +24,7 @@ LiquidCrystal lcd(register_select, enable, db4, db5, db6, db7);
 const int lcd_rows = 2;
 const int lcd_cols = 16;
 
-struct number_field {
-    const int col;
-    const int row;
-    int value;
-    int upperLimit;
-    int lowerLimit;
-    bool active;
-
-    // Constructor
-    number_field(int col, int row, int val, int upper, int lower, bool active)
-        : col(col), row(row), value(val), upperLimit(upper), lowerLimit(lower), active(active) {}
-};
-
-// Instances with a struct to handle the whole state
-struct CalculatorState {
-    number_field first{3, 0, 0, 99, 0, true};
-    number_field second{6, 0, 0, 99, 0, false};
-    number_field result{8, 0, 0, 999, 0, false};
-};
-
-CalculatorState state;
+Screen::CalculatorState state;
 
 //pins
 const int add_pin = 12;
@@ -69,7 +53,7 @@ bool allowAction(unsigned long *lastPressTime, int interval = 250)
   return true;
 };
 
-void print2serial(CalculatorState *state, unsigned long *lastPrintTime){
+void print2serial(Screen::CalculatorState *state, unsigned long *lastPrintTime){
   // prints only happen when given interval is exceeded
   if(!allowAction(lastPrintTime)) { return; }
   printDebug(state->first.value);
@@ -78,89 +62,7 @@ void print2serial(CalculatorState *state, unsigned long *lastPrintTime){
   Serial.println();
 }
 
-void init_squence()
-{
-  lcd.print("Welcome to Add3r");
-  lcd.setCursor(5, 1);
-  for (int i = 0; i < 16; i++)
-  {
-    lcd.setCursor(i, 1);
-    lcd.print('=');
-    delay(125);
-  }
-}
-
-void start_screen()
-{
-  lcd.setCursor(2, 0);
-  lcd.print("00+00=0");
-  
-  lcd.setCursor(12, 0);
-  lcd.print("ADD>");
-  
-  lcd.setCursor(0, 1);
-  lcd.print("<ENTR");
-  
-  lcd.setCursor(8, 1);
-  lcd.print("AC");
-  
-  lcd.setCursor(12, 1);
-  lcd.print("SUB>");
-}
-
-// an additional 'mode'/'m' button could trigger a mode selection screen to 
-// let the user do different operations
-// this would mean the start_screen (base_screen ?) would need a operation param
-
-int update_numberfield(const number_field *field)
-{
-  if (field->value < field->lowerLimit || field->value > field->upperLimit)
-  {
-  	return 1;
-  };
-  if (field->value % 10 == 0)
-  {
-    int tenner = field->value / 10;
-    lcd.setCursor(field->col-1, field->row);
-    lcd.print(tenner);
-    lcd.setCursor(field->col, field->row);
-  	lcd.print(0);
-    return 0;
-  }
-  lcd.setCursor(field->col, field->row);
-  lcd.print(field->value%10);
-  return 0;
-}
-
-int write_result(int val, CalculatorState *state)
-{
-  if (val < state->result.lowerLimit || val > state->result.upperLimit)
-  {
-  	return 1;
-  };
-  lcd.setCursor(state->result.col, state->result.row);
-  lcd.print(val);
-  return 0;
-}
-
-void reset(CalculatorState *state)
-{
-   lcd.clear();
-   start_screen();
-  
-   state->first.active = true;
-   state->first.value = 0;
-  
-   state->second.active = false;
-   state->second.value = 0;
-  
-   state->result.active = false;
-   state->result.value = 0;
-  
-   lcd.setCursor(state->first.col, state->first.row);
-}
-
-void catch_add_press(unsigned long *lastAddPress, CalculatorState *state)
+void catch_add_press(unsigned long *lastAddPress, Screen::CalculatorState *state)
 { 
    if (!allowAction(lastAddPress)){ return; }
     
@@ -168,7 +70,7 @@ void catch_add_press(unsigned long *lastAddPress, CalculatorState *state)
    {
      //check limits
      state->first.value += 1;
-     if(0 != update_numberfield(&(state->first)))
+     if(0 != Screen::update_numberfield(&(state->first)))
      {
        Serial.println("Input would exceed limits");
        state->first.value -= 1;
@@ -180,7 +82,7 @@ void catch_add_press(unsigned long *lastAddPress, CalculatorState *state)
    {
      //check limits
      state->second.value += 1;
-     if(0 != update_numberfield(&(state->second)))
+     if(0 != Screen::update_numberfield(&(state->second)))
      {
        Serial.println("Input would exceed limits");
        state->second.value -= 1;
@@ -189,7 +91,7 @@ void catch_add_press(unsigned long *lastAddPress, CalculatorState *state)
   }
 }
 
-void catch_sub_press(unsigned long *lastSubPress, CalculatorState *state)
+void catch_sub_press(unsigned long *lastSubPress, Screen::CalculatorState *state)
 { 
    if (!allowAction(lastSubPress)){ return; }
     
@@ -197,7 +99,7 @@ void catch_sub_press(unsigned long *lastSubPress, CalculatorState *state)
    {
      // check limits
      state->first.value -= 1;
-     if(0 != update_numberfield(&(state->first)))
+     if(0 != Screen::update_numberfield(&(state->first)))
      {
        Serial.println("Input would exceed limits");
        state->first.value += 1;
@@ -209,7 +111,7 @@ void catch_sub_press(unsigned long *lastSubPress, CalculatorState *state)
    {
      // check limits
      state->second.value -= 1;
-     if(0 != update_numberfield(&(state->second)))
+     if(0 != Screen::update_numberfield(&(state->second)))
      {
        Serial.println("Input would exceed limits");
        state->second.value += 1;
@@ -218,7 +120,7 @@ void catch_sub_press(unsigned long *lastSubPress, CalculatorState *state)
    }
 }
 
-void catch_entr_press(unsigned long *lastEntrPress, CalculatorState *state)
+void catch_entr_press(unsigned long *lastEntrPress, Screen::CalculatorState *state)
 { 
    if (!allowAction(lastEntrPress)){ return; }
   
@@ -234,14 +136,14 @@ void catch_entr_press(unsigned long *lastEntrPress, CalculatorState *state)
       int sum = state->first.value + state->second.value;
       // TODO: fix this inconsistency in how result-field is written compared to the others
       // because the result field isn't written incremetally it has to be simulated to written so
-      // this also means that the limit check in the update_numberfield can't catch these so
+      // this also means that the limit check in the Screen::update_numberfield can't catch these so
       // it has to be done once before
       if (sum < state->result.lowerLimit || sum > state->result.upperLimit)
       {
   	Serial.println("Result would exceed limits");
         return;
       };
-      write_result(sum, state);
+      Screen::write_result(sum, state);
 
       state->second.active = false;
       state->result.active = true;
@@ -251,15 +153,15 @@ void catch_entr_press(unsigned long *lastEntrPress, CalculatorState *state)
   
    if (state->result.active)
    {
-     reset(state);
+     Screen::reset(state);
      return;
    }
 }
 
-void catch_ac_press(unsigned long *lastAcPress, CalculatorState *state)
+void catch_ac_press(unsigned long *lastAcPress, Screen::CalculatorState *state)
 { 
    if (!allowAction(lastAcPress)){ return; }
-   reset(state);
+   Screen::reset(state);
 }
 
 void _setup()
@@ -272,11 +174,11 @@ void _setup()
   pinMode(ac_pin, INPUT);
   
   // init sequence
-  init_squence();
+  Screen::init_sequence();
   lcd.clear();
   
   // base screen
-  start_screen();
+  Screen::start_screen();
   
   Serial.begin(9600);
 }
