@@ -1,3 +1,8 @@
+## What is does
+
+Adds two digit numbers together
+
+
 ## Files in this project
 
 - .clangd: to load all arduino specific packages correctly 
@@ -8,7 +13,16 @@
 - images what the setup for the hardware looks like
 
 
-### caveats for neovim setup
+### caveats 
+
+#### hardware setup
+
+The Buttons where designed to align with the '>' on the screen, however currently the HW setup isnt reflecting that.
+Instead the mapping is as follows:
+#     #      #    #
+^     ^      ^    ^
+AC    ENTR   SUB  ADD
+#### neovim setup
 
 1. the LiquidCrystal lib for arduino has to be installed separately with the cli  
 
@@ -16,3 +30,4 @@
 arduino-cli lib install "LiquidCrystal"
 ```
 2. if the arduino has been plugged into a new port compared to the last time it worked, then this port has to be set in the sketch.yaml 
+
