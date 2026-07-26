@@ -5,6 +5,7 @@
 - local.cpp/h: files for your code 
 - <projectName>.ino: proxy file for arduino lsp
 - sketch.yaml: enviroment config and default env-vars
+- images what the setup for the hardware looks like
 
 
 ### caveats for neovim setup
