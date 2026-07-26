@@ -22,7 +22,7 @@ namespace Calculator {
       void start_screen()
       {
         lcd.setCursor(2, 0);
-        lcd.print("00+00=0");
+        lcd.print("00+00=000");
         
         lcd.setCursor(12, 0);
         lcd.print("ADD>");
@@ -41,23 +41,31 @@ namespace Calculator {
       // let the user do different operations
       // this would mean the start_screen (base_screen ?) would need a operation param
       
+      /**
+       * this function assumes the col is initialy set on the smallest digit
+       * */
       int update_numberfield(const number_field *field)
       {
-        if (field->value < field->lowerLimit || field->value > field->upperLimit)
-        {
-        	return 1;
+        if (field->value < field->lowerLimit || field->value > field->upperLimit){
+          return 1;
         };
-        if (field->value % 10 == 0)
-        {
-          int tenner = field->value / 10;
-          lcd.setCursor(field->col-1, field->row);
-          lcd.print(tenner);
-          lcd.setCursor(field->col, field->row);
-          lcd.print(0);
+
+        if (field->value >= 100){
+          lcd.setCursor(field->col-2, field->row);
+          lcd.print(field->value);
           return 0;
         }
+
+        if (field->value >= 10){
+          lcd.setCursor(field->col-1, field->row);
+          lcd.print(field->value);
+          return 0;
+        }
+
+        lcd.setCursor(field->col-1, field->row);
+        lcd.print("0");
         lcd.setCursor(field->col, field->row);
-        lcd.print(field->value%10);
+        lcd.print(field->value);
         return 0;
       }
       

@@ -21,7 +21,7 @@ namespace Calculator {
 	struct CalculatorState {
 	    number_field first{3, 0, 0, 99, 0, true};
 	    number_field second{6, 0, 0, 99, 0, false};
-	    number_field result{8, 0, 0, 999, 0, false};
+	    number_field result{10, 0, 0, 999, 0, false};
 	};
 	
 	// functions
