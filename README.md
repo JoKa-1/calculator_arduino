@@ -18,10 +18,10 @@ Adds two digit numbers together
 #### hardware setup
 
 The Buttons where designed to align with the '>' on the screen, however currently the HW setup isnt reflecting that.
-Instead the mapping is as follows (where 'o' is a button):
-o     o      o    o
-^     ^      ^    ^
-AC    ENTR   SUB  ADD
+Instead the mapping is as follows from left to right (see HW setup under images/):
+AC ENTR ADD SUB
+
+
 #### neovim setup
 
 1. the LiquidCrystal lib for arduino has to be installed separately with the cli  
