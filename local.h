@@ -6,20 +6,16 @@
 #include "src/utils.h"
 #include <Arduino.h>
 
-using namespace Calculator;
-
 /** LCD setup **/
-
 // control Pins
 const int register_select = 2, read_or_write = 3, enable = 4;
-
 // data Pins
 const int db4 = 5, db5 = 6, db6 = 7, db7 = 8;
 
+/** general setup **/
 // lcd dimensions
 const int lcd_rows = 2;
 const int lcd_cols = 16;
-
 
 //pins
 const int add_pin = 12;

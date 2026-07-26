@@ -1,6 +1,8 @@
 #include "local.h"
 #include <LiquidCrystal.h>
 
+using namespace Calculator;
+
 // init lcd singleton
 LiquidCrystal lcd(register_select, enable, db4, db5, db6, db7);
 
@@ -13,7 +15,7 @@ unsigned long lastSubPress = 0; // is updated when SUB is pressed
 unsigned long lastAcPress = 0; // is updated when AC is pressed
 unsigned long lastEntrPress = 0; // is updated when ENTR is pressed
 
-// Print timing
+// print timing
 unsigned long startMillisPrint = 0; // is updated when print2serial is called
 
 void _setup()
